@@ -18,6 +18,12 @@ Infinite Atelier 将画布编排、图片生成、参考图、提示词、资产
 - 导演台：内置 MONOFORM 预演工具，用于镜头、角色和动作设计。
 - 品牌主页：五套整体配色、动态品牌背景与最近项目入口。
 
+## 演示与导演台
+
+- [观看 Infinite Atelier 项目演示视频（MP4，约 63 MB）](https://github.com/GuiYi-Xi/infinite-atelier/releases/download/v1.0.0/Infinite-Atelier-Demo.mp4)
+- [MONOFORM 素形白模预演工作台源码](https://github.com/GuiYi-Xi/monoform-previs-studio)
+- [导演台使用教程（哔哩哔哩）](https://www.bilibili.com/video/BV1HNud6SEgs/)
+
 ## Windows 启动
 
 双击仓库根目录的 `start.bat`。脚本会检查 Node.js、安装依赖并启动：
