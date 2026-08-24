@@ -1483,12 +1483,6 @@ function AtelierCanvasPage() {
         saveAs(node.metadata.content, `canvas-${node.type}-${node.id}.${node.type === CanvasNodeType.Video ? "mp4" : node.type === CanvasNodeType.Audio ? audioExtension(node.metadata.mimeType) : imageExtension(node.metadata.content)}`);
     }, []);
 
-    const downloadBatchImage = useCallback((node: CanvasNodeData, imageId: string) => {
-        const image = node.metadata?.images?.find((item) => item.id === imageId);
-        if (!image?.content) return;
-        saveAs(image.content, `canvas-image-${node.id}-${image.id}.${imageExtension(image.content)}`);
-    }, []);
-
     const saveNodeAsset = useCallback(
         async (node: CanvasNodeData) => {
             if (node.type === CanvasNodeType.Text) {
@@ -2838,6 +2832,7 @@ function AtelierCanvasPage() {
                                     from={from}
                                     to={to}
                                     active={selectedConnectionId === connection.id || relatedHighlight.connectionIds.has(connection.id)}
+                                    selected={selectedConnectionId === connection.id}
                                     onSelect={() => {
                                         setSelectedConnectionId(connection.id);
                                         setSelectedNodeIds(new Set());
@@ -2848,6 +2843,7 @@ function AtelierCanvasPage() {
                                         setSelectedNodeIds(new Set());
                                         setContextMenu({ type: "connection", x: event.clientX, y: event.clientY, connectionId: connection.id });
                                     }}
+                                    onDelete={() => deleteConnection(connection.id)}
                                 />
                             );
                         })}
@@ -2885,7 +2881,6 @@ function AtelierCanvasPage() {
                             onToggleBatch={toggleBatchExpanded}
                             onSetBatchPrimary={setBatchPrimary}
                             onDuplicateBatchImage={duplicateBatchImage}
-                            onDownloadBatchImage={downloadBatchImage}
                             onRetryBatchImage={retryBatchImage}
                             onDeleteBatchImage={deleteBatchImage}
                             onRetry={handleNodeRetry}

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import type { ReactNode } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Unlink2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { canvasThemes } from "@/lib/canvas-theme";
@@ -28,7 +28,7 @@ export function CanvasNodeContextMenu({ menu, onClose, onDuplicate, onDelete }: 
             onPointerDown={(event) => event.stopPropagation()}
         >
             {menu.type === "node" ? <MenuButton icon={<Plus className="size-4" />} label={t("canvas.controls.duplicate")} onClick={onDuplicate} /> : null}
-            <MenuButton icon={<Trash2 className="size-4" />} label={t("canvas.controls.delete")} onClick={onDelete} danger />
+            <MenuButton icon={menu.type === "connection" ? <Unlink2 className="size-4" /> : <Trash2 className="size-4" />} label={t(menu.type === "connection" ? "canvas.controls.disconnect" : "canvas.controls.delete")} onClick={onDelete} danger />
         </div>
     );
 }

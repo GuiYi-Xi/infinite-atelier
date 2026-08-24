@@ -674,6 +674,7 @@ export default {
             ratio: "比例",
             duplicate: "复制",
             delete: "删除",
+            disconnect: "断开连接",
             images: "{{count}} 张",
             generations: "{{count}} 次",
             reasoning: "推理",

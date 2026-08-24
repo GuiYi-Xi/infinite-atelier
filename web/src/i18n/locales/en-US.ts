@@ -675,6 +675,7 @@ export default {
             ratio: "Ratio",
             duplicate: "Duplicate",
             delete: "Delete",
+            disconnect: "Disconnect",
             images: "{{count}} images",
             generations: "{{count}} runs",
             reasoning: "Reasoning",

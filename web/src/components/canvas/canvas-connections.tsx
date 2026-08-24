@@ -1,4 +1,6 @@
 import type { MouseEvent as ReactMouseEvent } from "react";
+import { Unlink2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { canvasThemes } from "@/lib/canvas-theme";
 import { useThemeStore } from "@/stores/use-theme-store";
@@ -9,17 +11,22 @@ export function ConnectionPath({
     from,
     to,
     active,
+    selected,
     onSelect,
     onContextMenu,
+    onDelete,
 }: {
     connection: CanvasConnection;
     from: CanvasNodeData;
     to: CanvasNodeData;
     active: boolean;
+    selected: boolean;
     onSelect: () => void;
     onContextMenu?: (event: ReactMouseEvent<SVGPathElement>) => void;
+    onDelete: () => void;
 }) {
     const theme = canvasThemes[useThemeStore((state) => state.theme)];
+    const { t } = useTranslation();
     const startX = from.position.x + from.width;
     const startY = from.position.y + from.height / 2;
     const endX = to.position.x;
@@ -27,6 +34,8 @@ export function ConnectionPath({
     const dx = Math.abs(endX - startX);
     const curvature = Math.max(dx * 0.5, 50);
     const pathD = `M ${startX} ${startY} C ${startX + curvature} ${startY}, ${endX - curvature} ${endY}, ${endX} ${endY}`;
+    const midpointX = (startX + endX) / 2;
+    const midpointY = (startY + endY) / 2;
 
     return (
         <g>
@@ -55,6 +64,25 @@ export function ConnectionPath({
                 fill="none"
                 style={{ filter: active ? `drop-shadow(0 0 8px ${theme.node.activeStroke}66)` : undefined, pointerEvents: "none" }}
             />
+            {selected ? (
+                <foreignObject x={midpointX - 16} y={midpointY - 16} width="32" height="32" style={{ overflow: "visible", pointerEvents: "all" }}>
+                    <button
+                        type="button"
+                        data-canvas-no-zoom
+                        className="grid size-8 place-items-center rounded-full border shadow-lg transition hover:scale-105"
+                        style={{ background: theme.toolbar.panel, borderColor: theme.node.activeStroke, color: theme.node.activeStroke }}
+                        title={t("canvas.controls.disconnect")}
+                        aria-label={t("canvas.controls.disconnect")}
+                        onPointerDown={(event) => event.stopPropagation()}
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            onDelete();
+                        }}
+                    >
+                        <Unlink2 className="size-4" />
+                    </button>
+                </foreignObject>
+            ) : null}
         </g>
     );
 }
