@@ -30,9 +30,11 @@ http://localhost:3000
 
 ```powershell
 cd web
-npm install --legacy-peer-deps
+npm install --legacy-peer-deps --include=optional
 npm run dev
 ```
+
+`start.bat` 会校验 Vite 及其 Windows 原生模块；依赖不完整时会自动补装。
 
 ## 生产构建
 
