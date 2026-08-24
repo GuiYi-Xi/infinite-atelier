@@ -1,0 +1,18 @@
+.next/
+out/
+node_modules/
+.env*
+!.env.example
+data/
+*.log
+*.tsbuildinfo
+.DS_Store
+.idea
+web/dist
+**/dist
+# Local development and visual-test artifacts
+.learnings/
+.workbuddy/
+web/.fix-tmp/
+web/.playwright-cli/
+web/output/

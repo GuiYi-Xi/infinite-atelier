@@ -1,0 +1,2 @@
+web/public/monoform/assets/*.js -whitespace
+* linguist-detectable=false
