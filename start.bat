@@ -3,12 +3,39 @@ setlocal
 title Infinite Atelier Launcher
 cd /d "%~dp0web"
 
+set "NODE_EXE="
+set "NODE_DIR="
 where node >nul 2>nul
-if errorlevel 1 (
-    echo [ERROR] Node.js not found in PATH. Please install Node.js first.
+if not errorlevel 1 set "NODE_EXE=node.exe"
+if not defined NODE_EXE if exist "%ProgramFiles%\nodejs\node.exe" (
+    set "NODE_EXE=%ProgramFiles%\nodejs\node.exe"
+    set "NODE_DIR=%ProgramFiles%\nodejs"
+)
+if not defined NODE_EXE if exist "%LocalAppData%\Programs\nodejs\node.exe" (
+    set "NODE_EXE=%LocalAppData%\Programs\nodejs\node.exe"
+    set "NODE_DIR=%LocalAppData%\Programs\nodejs"
+)
+
+if not defined NODE_EXE (
+    echo [ERROR] Node.js is required to run Infinite Atelier.
+    echo [ERROR] 未检测到 Node.js。请先安装 Node.js LTS：
+    echo         https://nodejs.org/en/download
+    echo.
+    echo The download page will open now. After installation, close this window and run start.bat again.
+    start "" "https://nodejs.org/en/download"
     pause
     exit /b 1
 )
+
+if defined NODE_DIR set "PATH=%NODE_DIR%;%PATH%"
+"%NODE_EXE%" --version >nul 2>nul
+if errorlevel 1 (
+    echo [ERROR] Node.js was found but could not be started.
+    echo Please reinstall Node.js LTS from https://nodejs.org/en/download
+    pause
+    exit /b 1
+)
+echo [INFO] Using Node.js: %NODE_EXE%
 
 set "NEEDS_INSTALL=0"
 if not exist "node_modules\vite\package.json" set "NEEDS_INSTALL=1"

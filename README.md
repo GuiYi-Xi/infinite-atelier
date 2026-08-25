@@ -26,7 +26,11 @@ Infinite Atelier 将画布编排、图片生成、参考图、提示词、资产
 
 ## Windows 启动
 
-双击仓库根目录的 `start.bat`。脚本会检查 Node.js、安装依赖并启动：
+双击仓库根目录的 `start.bat`。电脑需要先安装 Node.js LTS（脚本会自动识别 PATH、Program Files 和用户目录中的常见安装位置）：
+
+[下载 Node.js LTS](https://nodejs.org/en/download)
+
+启动脚本会自动安装依赖并启动：
 
 ```text
 http://localhost:3000
