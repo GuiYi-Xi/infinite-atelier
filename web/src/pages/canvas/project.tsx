@@ -1329,6 +1329,7 @@ function AtelierCanvasPage() {
             }
 
             if (event.key === "Delete" || event.key === "Backspace") {
+                event.preventDefault();
                 if (selectedNodeIdsRef.current.size) {
                     deleteNodes(new Set(selectedNodeIdsRef.current));
                 } else if (selectedConnectionId) {
