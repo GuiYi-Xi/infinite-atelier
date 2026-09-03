@@ -35,11 +35,11 @@ Infinite Atelier 将画布编排、图片生成、参考图、提示词、资产
 
 ## Windows 启动
 
-双击仓库根目录的 `start.bat`。电脑需要先安装 Node.js LTS（脚本会自动识别 PATH、Program Files 和用户目录中的常见安装位置）：
+双击仓库根目录的 `start.bat`。电脑需要先安装 Node.js LTS（Node.js 20.19+ 或 22.12+）。启动器会刷新系统 PATH，并识别官方安装、NVM、Volta、Scoop、fnm、注册表和常见安装目录：
 
 [下载 Node.js LTS](https://nodejs.org/en/download)
 
-启动脚本会自动安装依赖并启动：
+启动脚本会自动安装依赖，并从 `3000` 开始选择可用端口启动：
 
 ```text
 http://localhost:3000
@@ -54,6 +54,8 @@ npm run dev
 ```
 
 `start.bat` 会校验 Vite 及其 Windows 原生模块；依赖不完整时会自动补装。
+
+如果安装 Node.js 后仍提示找不到，请先重启 Windows（或注销后重新登录），然后再次运行 `start.bat`。启动器不会自动重复打开 Node.js 下载页面。
 
 首次启动会在 `web/node_modules` 安装前端依赖，因此本地目录会增加数万个文件和约数百 MB 占用。该目录已被 Git 忽略，不会上传到仓库。
 
