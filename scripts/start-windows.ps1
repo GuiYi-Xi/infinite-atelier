@@ -156,8 +156,32 @@ if (-not $supported) {
 Write-Host "[INFO] Node.js v$nodeVersion" -ForegroundColor Cyan
 Write-Host "[INFO] $nodeExe" -ForegroundColor DarkGray
 
+# Override machine-wide npm cache settings that may point into Program Files.
+$localAppData = [Environment]::GetFolderPath("LocalApplicationData")
+if (-not $localAppData) {
+    Stop-WithMessage @("[ERROR] Windows could not locate the current user's local application data directory.")
+}
+$npmCache = Join-Path $localAppData "InfiniteAtelier\npm-cache"
+$cacheProbe = Join-Path $npmCache ([Guid]::NewGuid().ToString() + ".tmp")
+try {
+    New-Item -ItemType Directory -Path $npmCache -Force | Out-Null
+    [IO.File]::WriteAllText($cacheProbe, "cache write check")
+} catch {
+    Stop-WithMessage @(
+        "[ERROR] Cannot write to the npm cache: $npmCache",
+        "Check this directory's permissions and any security software restrictions.",
+        $_.Exception.Message
+    )
+} finally {
+    if (Test-Path -LiteralPath $cacheProbe) {
+        Remove-Item -LiteralPath $cacheProbe -ErrorAction SilentlyContinue
+    }
+}
+$env:npm_config_cache = $npmCache
+Write-Host "[INFO] npm cache: $npmCache" -ForegroundColor DarkGray
+
 if ($CheckOnly) {
-    Write-Host "[OK] Node.js and npm are ready." -ForegroundColor Green
+    Write-Host "[OK] Node.js, npm, and the writable npm cache are ready." -ForegroundColor Green
     exit 0
 }
 
@@ -181,11 +205,13 @@ if (-not $needsInstall) {
 
 if ($needsInstall) {
     Write-Host "[1/2] Installing project dependencies. This can take several minutes..." -ForegroundColor Cyan
-    & $npmCmd install --legacy-peer-deps --include=optional --no-audit --no-fund
+    & $npmCmd install --cache $npmCache --legacy-peer-deps --include=optional --no-audit --no-fund
     if ($LASTEXITCODE -ne 0) {
         Stop-WithMessage @(
             "[ERROR] Dependency installation failed.",
-            "Check the network connection, then run start.bat again."
+            "Read the npm error above for the cause (for example, permissions, locked files, or network access).",
+            "npm cache and logs: $npmCache",
+            "Resolve the reported issue, then run start.bat again."
         ) $LASTEXITCODE
     }
 
@@ -202,5 +228,5 @@ $port = Get-AvailablePort
 $localUrl = "http://localhost:$port"
 Write-Host "[2/2] Starting Infinite Atelier at $localUrl" -ForegroundColor Green
 Start-Process -FilePath "cmd.exe" -ArgumentList "/c", "ping 127.0.0.1 -n 5 >nul & start `"`" $localUrl" -WindowStyle Hidden
-& $npmCmd run dev -- --port $port --strictPort
+& $npmCmd --cache $npmCache run dev -- --port $port --strictPort
 exit $LASTEXITCODE
